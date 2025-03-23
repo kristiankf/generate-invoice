@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+    --font-default: 'Montserrat', sans-serif;
+    --font-heading: 'Times New Roman', sans-serif;
+}
+
+html {
+    @apply font-default
+}
+
+.max-width {
+    @apply mx-auto max-w-[1440px] px-4
+}
+
+.info-text {
+    @apply text-xs text-slate-400 dark:text-slate-500
+}
+
+h1, h2, h3 {
+    @apply font-heading
+}
+
+.label {
+    @apply block text-sm font-medium mb-2
+}
+
