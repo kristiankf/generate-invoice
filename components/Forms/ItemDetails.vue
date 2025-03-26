@@ -31,7 +31,7 @@
                                 }" required>
                                 <template #leading>
                                     <p class="text-sm">
-                                        {{currency.find(item => item.code === 'GHS')?.symbol}}
+                                        {{ formStore.form.invoiceDetails.currency }}
                                     </p>
                                 </template>
                             </UInput>
@@ -100,8 +100,8 @@
                                 }">
                                 <template #leading>
                                     <p class="text-sm">
-                                        {{charge.type === 'value' ? currency.find(item => item.code === 'GHS')?.symbol :
-                                            '%'}}
+                                        {{ charge.type === 'value' ? formStore.form.invoiceDetails.currency :
+                                            '%' }}
                                     </p>
                                 </template>
                             </UInput>
@@ -128,7 +128,7 @@
                         }">
                         <template #leading>
                             <p class="text-sm">
-                                {{currency.find(item => item.code === 'GHS')?.symbol}}
+                                {{ formStore.form.invoiceDetails.currency }}
                             </p>
                         </template>
                     </UInput>
@@ -146,7 +146,7 @@
                             }" :aria-readonly="true" :disabled="true">
                             <template #leading>
                                 <p class="text-sm">
-                                    {{currency.find(item => item.code === 'GHS')?.symbol}}
+                                    {{ formStore.form.invoiceDetails.currency }}
                                 </p>
                             </template>
                         </UInput>
@@ -163,7 +163,7 @@
                             }" :aria-readonly="true" :disabled="true">
                             <template #leading>
                                 <p class="text-sm">
-                                    {{currency.find(item => item.code === 'GHS')?.symbol}}
+                                    {{ formStore.form.invoiceDetails.currency }}
                                 </p>
                             </template>
                         </UInput>
@@ -180,7 +180,7 @@
                         }" :aria-readonly="true" :disabled="true">
                         <template #leading>
                             <p class="text-sm">
-                                {{currency.find(item => item.code === 'GHS')?.symbol}}
+                                {{ formStore.form.invoiceDetails.currency }}
                             </p>
                         </template>
                     </UInput>
@@ -194,7 +194,7 @@
                 </UButton>
 
                 <UButton trailing-icon="i-lucide-arrow-right" :disabled="!stepper?.hasNext" type="submit">
-                    Next
+                    Save and Continue
                 </UButton>
             </div>
         </form>
@@ -211,19 +211,15 @@ interface Props {
 
 const { stepper } = defineProps<Props>()
 
-interface FormData {
+export interface ItemDetails {
     items: { id: number, description: string, quantity: number | null, unitPrice: number | null }[],
     discount: { type: "rate" | "value", discountValue: number | null },
     charges: { id: number, type: "rate" | "value", chargeValue: number | null, name: string }[],
     totals: { subTotal: number | null, discount: number | null, charges: number | null, grandTotal: number | null }
 }
 
-const formData = ref<FormData>({
-    items: [{ description: '', quantity: null, unitPrice: null, id: 1 }],
-    discount: { type: "rate", discountValue: null },
-    charges: [{ type: "rate", name: '', chargeValue: null, id: 1 }],
-    totals: { subTotal: null, discount: null, charges: null, grandTotal: null }
-})
+const formStore = useFormStore()
+const formData = ref<ItemDetails>(formStore.form.itemDetails)
 
 const trackItemId = ref(1)
 const trackChargeId = ref(1)
@@ -246,32 +242,32 @@ function removeCharge(id: number) {
     formData.value.charges = formData.value.charges.filter(charge => charge.id !== id)
 }
 
-function calculateSubTotal(items: FormData["items"]): number {
+function calculateSubTotal(items: ItemDetails["items"]): number {
     return items.reduce((sum, item) => {
         if (!item.quantity || !item.unitPrice) return sum;
         return sum + item.quantity * item.unitPrice;
     }, 0);
 }
 
-function calculateTotalDiscount(subTotal: number, discount: FormData["discount"]): number {
+function calculateTotalDiscount(subTotal: number, discount: ItemDetails["discount"]): number {
     if (!discount.discountValue) return 0;
     return discount.type === "rate"
         ? (discount.discountValue / 100) * subTotal
         : discount.discountValue;
 }
 
-function calculateTotalCharges(subTotal: number, charges: FormData["charges"]): number {
+function calculateTotalCharges(subTotal: number, charges: ItemDetails["charges"]): number {
     return charges.reduce((sum, charge) => {
         if (!charge.chargeValue) return sum;
         return sum + (charge.type === "rate" ? (charge.chargeValue / 100) * subTotal : charge.chargeValue);
     }, 0);
 }
 
-function calculateGrandTotal(formData: FormData): number {
+function calculateGrandTotal(formData: ItemDetails): number {
     const subTotal = calculateSubTotal(formData.items);
     const discount = calculateTotalDiscount(subTotal, formData.discount);
     const charges = calculateTotalCharges(subTotal, formData.charges);
-    return subTotal - discount + charges;
+    return Number((subTotal - discount + charges).toFixed(2));
 }
 
 
@@ -288,6 +284,7 @@ watch([formData], () => {
 function validateForm() {
     console.log(formData)
     stepper?.next()
+    formStore.formComplete = true
 }
 </script>
 

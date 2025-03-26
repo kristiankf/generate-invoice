@@ -26,3 +26,15 @@ h1, h2, h3 {
     @apply block text-sm font-medium mb-2
 }
 
+.invoice-font-small {
+    @apply text-[clamp(4px,1.5vw,12px)]
+}
+
+.invoice-font {
+    @apply text-[clamp(6px,1.7vw,15px)]
+}
+
+.invoice-font-large {
+    @apply text-[clamp(8px,2vw,18px)]
+}
+

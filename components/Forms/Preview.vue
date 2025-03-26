@@ -1,6 +1,6 @@
 <template>
     <div>
-        preview details
+        <InvoicePreview />
 
         <!-- buttons -->
         <div class="flex gap-2 justify-between mt-4 max-w-[500px] mx-auto">
@@ -8,8 +8,8 @@
                 Prev
             </UButton>
 
-            <UButton trailing-icon="i-lucide-arrow-right" :disabled="!stepper?.hasNext" @click="stepper?.next()">
-                Next
+            <UButton trailing-icon="hugeicons:download-02" :disabled="!stepper?.hasNext" @click="stepper?.next()">
+                Finish & Download
             </UButton>
         </div>
     </div>

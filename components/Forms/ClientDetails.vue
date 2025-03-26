@@ -54,7 +54,7 @@
                 </UButton>
 
                 <UButton trailing-icon="i-lucide-arrow-right" :disabled="!stepper?.hasNext" type="submit">
-                    Next
+                    Save and Continue
                 </UButton>
             </div>
         </form>
@@ -71,13 +71,16 @@ interface Props {
 
 const { stepper } = defineProps<Props>()
 
-const formData = ref({
-    clientName: '',
-    businessName: '',
-    businessAddress: { street: '', city: '', country: '' },
-    email: '',
-    phoneNumber: '',
-})
+export interface ClientDetails {
+    businessName: string;
+    businessAddress: { street: string, city: string, country: string };
+    email: string;
+    phoneNumber: string;
+    clientName: string;
+}
+
+const formStore = useFormStore()
+const formData = ref<ClientDetails>(formStore.form.clientDetails)
 
 const toast = useToast()
 

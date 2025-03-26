@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <UStepper ref="stepper" :items="items" color="neutral" size="sm">
+        <UStepper ref="stepper" :disabled="!formStore.formComplete" :items="items" color="neutral" size="sm">
             <template #content="{ item }">
                 <div class="my-5">
                     <FormsInvoiceDetails v-if="item.slot === 'invoice'" :stepper="stepper" />
@@ -12,39 +12,47 @@
                 </div>
             </template>
         </UStepper>
-
     </div>
 </template>
 
 <script setup lang="ts">
-const items = [
+import type { StepperItem } from '@nuxt/ui';
+
+const formStore = useFormStore()
+const items: StepperItem[] = [
     {
         slot: 'invoice',
         description: 'Invoice Details',
-        icon: 'mdi:invoice-text-edit-outline'
+        icon: 'mdi:invoice-text-edit-outline',
+        value: 'invoice',
     }, {
         slot: 'seller',
         description: 'Seller Details',
-        icon: 'mdi:card-account-details-outline'
+        icon: 'mdi:card-account-details-outline',
+        value: 'seller',
     }, {
         slot: 'client',
         description: 'Client Details',
-        icon: 'bx:bxs-user-detail'
+        icon: 'bx:bxs-user-detail',
+        value: 'client',
     }
     , {
         slot: 'items',
         description: 'Items',
-        icon: 'material-symbols:shopping-cart-outline'
+        icon: 'material-symbols:shopping-cart-outline',
+        value: 'items',
     }
     // , {
     //     slot: 'payment',
     //     description: 'Payment Details',
-    //     icon: 'material-symbols:payments-outline'
+    //     icon: 'material-symbols:payments-outline',
+    //   value: '',  
     // }
     , {
         slot: 'preview',
         description: 'Preview',
-        icon: 'icon-park-outline:preview-open'
+        icon: 'icon-park-outline:preview-open',
+        value: 'preview',
     }
 ]
 

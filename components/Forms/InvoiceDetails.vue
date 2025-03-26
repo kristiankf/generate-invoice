@@ -30,7 +30,22 @@
                     <UInputMenu v-model="formData.currency" value-key="value" :items="items" variant="subtle" size="lg"
                         class="w-full" placeholder="Select currency (Default $)" />
                 </UFormField>
+            </div>
 
+            <!-- payment terms -->
+            <div class="">
+                <UFormField label="Payment Terms">
+                    <UInput v-model="formData.paymentTerms" variant="subtle" size="lg" class="w-full"
+                        placeholder="Payment terms here" />
+                </UFormField>
+            </div>
+
+            <!-- notes -->
+            <div class="">
+                <UFormField label="Notes" help="(Any extra notes for your client)">
+                    <UInput v-model="formData.notes" variant="subtle" size="lg" class="w-full"
+                        placeholder="Put your notes here" />
+                </UFormField>
             </div>
 
             <!-- buttons -->
@@ -40,7 +55,7 @@
                 </UButton>
 
                 <UButton trailing-icon="i-lucide-arrow-right" :disabled="!stepper?.hasNext" type="submit">
-                    Next
+                    Save and Continue
                 </UButton>
             </div>
         </form>
@@ -58,12 +73,17 @@ interface Props {
 
 const { stepper } = defineProps<Props>()
 
-const formData = ref({
-    invoiceNo: '',
-    invoiceDate: '',
-    dueDate: '',
-    currency: '',
-})
+export interface InvoiceDetails {
+    invoiceNo: string,
+    invoiceDate: string,
+    dueDate: string,
+    currency: string,
+    notes: string,
+    paymentTerms: string,
+
+}
+const formStore = useFormStore()
+const formData = ref<InvoiceDetails>(formStore.form.invoiceDetails)
 
 const items = currency.map(item => {
     return {

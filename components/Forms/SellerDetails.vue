@@ -5,7 +5,7 @@
             <div class="">
                 <UFormField label="Logo" help="(Any
                         image with dimensions 4 x 4)">
-                    <UInput v-model="formData.logo" variant="subtle" size="lg" class="w-full"
+                    <UInput @change="handleImageUpload" variant="subtle" size="lg" class="w-full"
                         placeholder="eg. INV-2039283" type="file" accept="image/*" />
                 </UFormField>
             </div>
@@ -63,7 +63,7 @@
                 </UButton>
 
                 <UButton trailing-icon="i-lucide-arrow-right" :disabled="!stepper?.hasNext" type="submit">
-                    Next
+                    Save and Continue
                 </UButton>
             </div>
         </form>
@@ -80,14 +80,25 @@ interface Props {
 
 const { stepper } = defineProps<Props>()
 
-const formData = ref({
-    logo: '',
-    businessName: '',
-    businessAddress: { street: '', city: '', country: '' },
-    email: '',
-    phoneNumber: '',
-    taxId: '',
-})
+
+export interface SellerDetails {
+    logo: string;
+    businessName: string;
+    businessAddress: { street: string, city: string, country: string };
+    email: string;
+    phoneNumber: string;
+    taxId: string;
+}
+const formStore = useFormStore()
+const formData = ref<SellerDetails>(formStore.form.sellerDetails)
+
+function handleImageUpload(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+        formStore.form.sellerDetails.logo = URL.createObjectURL(file);
+    }
+    console.log(formStore.form.sellerDetails.logo)
+}
 
 function validateForm() {
     console.log(formData)

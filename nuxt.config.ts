@@ -12,5 +12,12 @@ export default defineNuxtConfig({
   //   colorMode: false,
   // },
 
-  modules: ["@nuxt/eslint", "@nuxt/icon", "@nuxt/image", "@nuxt/ui"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxt/icon",
+    "@nuxt/image",
+    "@nuxt/ui",
+    "@pinia/nuxt",
+    "pinia-plugin-persistedstate/nuxt",
+  ],
 });
