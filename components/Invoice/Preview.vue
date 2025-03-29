@@ -4,8 +4,8 @@
             Here is a preview of how your invoice will look like
         </div>
 
-        <div
-            class="w-full max-w-[210mm] aspect-[1/1.414] bg-white shadow-lg border p-[5%] min-[210mm]:p-[50px] mx-auto text-black invoice-font flex flex-col gap-5 justify-between">
+        <div ref="invoiceRef" id="invoice"
+            class="invoice w-full max-w-[210mm] aspect-[1/1.414] bg-white shadow-lg border p-[5%] min-[210mm]:p-[50px] mx-auto text-black invoice-font flex flex-col gap-5 justify-between">
 
             <!-- top -->
             <div class="">
@@ -153,19 +153,25 @@
                             <span class="font-medium">Subtotal</span>
                             <span>{{ currency }}{{ formStore.form.itemDetails.totals.subTotal }}</span>
                         </p>
-                        <p class="flex justify-between p-0.5 min-[210mm]:p-1 border-b border-info-900">
+                        <p v-if="formStore.form.itemDetails.totals.discount"
+                            class="flex justify-between p-0.5 min-[210mm]:p-1 border-b border-info-900">
                             <span class="font-medium">Discount</span>
                             <span>{{ currency }}{{ formStore.form.itemDetails.totals.discount }}</span>
                         </p>
-                        <p v-for="charge in formStore.form.itemDetails.charges" :key="charge.id"
-                            class="flex justify-between p-0.5 min-[210mm]:p-1 border-b border-info-900">
-                            <span class="font-medium">{{ charge.name }}</span>
-                            <span>{{ currency }}
-                                <span v-if="charge.type === 'rate'">{{ charge.chargeValue! *
-                                    formStore.form.itemDetails.totals.subTotal! }}({{ charge.chargeValue }}%)</span>
-                                <span v-if="charge.type === 'value'" class="">{{ charge.chargeValue }}</span>
-                            </span>
-                        </p>
+                        <template v-if="formStore.form.itemDetails.totals.charges">
+                            <p v-for="charge in formStore.form.itemDetails.charges" :key="charge.id"
+                                class="flex justify-between p-0.5 min-[210mm]:p-1 border-b border-info-900">
+                                <template v-if="charge.chargeValue">
+                                    <span class="font-medium">{{ charge.name }}</span>
+                                    <span>{{ currency }}
+                                        <span v-if="charge.type === 'rate'">{{ charge.chargeValue! *
+                                            formStore.form.itemDetails.totals.subTotal! }}({{ charge.chargeValue
+                                            }}%)</span>
+                                        <span v-if="charge.type === 'value'" class="">{{ charge.chargeValue }}</span>
+                                    </span>
+                                </template>
+                            </p>
+                        </template>
                         <p
                             class="bg-info-50 flex justify-between p-0.5 min-[210mm]:p-1 border-b border-info-900 text-info-900">
                             <span class="font-bold">Total</span>
@@ -189,14 +195,74 @@
                 </div>
             </div>
         </div>
+
+        <div class="flex justify-center items-center my-5">
+            <UButton size="xl" leading-icon="material-symbols:download-rounded" @click="generatePDF" color="neutral">
+                Download
+                Your
+                Invoice
+            </UButton>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
+// import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
+// import html2pdf from "html2pdf"
 
 const formStore = useFormStore()
 const currency = formStore.form.invoiceDetails.currency
+
+// Reference to the invoice section
+const invoiceRef = ref<HTMLElement | null>(null);
+
+const generatePDF = async () => {
+    const invoiceElement = document.getElementById("invoice");
+
+    if (invoiceElement) {
+        const { jsPDF } = await import("jspdf");
+        const canvas = await html2canvas(invoiceElement, { scale: 2 });
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+        pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
+        pdf.save("invoice.pdf");
+    }
+
+};
+
+// const printInvoice = () => {
+//     if (!invoiceRef.value) return;
+
+//     const printContent = invoiceRef.value.innerHTML;
+//     const originalContent = document.body.innerHTML;
+
+//     document.body.innerHTML = printContent;
+//     window.print();
+//     document.body.innerHTML = originalContent;
+// };
 </script>
 
-<style scoped></style>
+<style scoped>
+@media print {
+    body * {
+        visibility: hidden;
+
+    }
+
+    #invoice-container,
+    #invoice-container * {
+        visibility: visible;
+    }
+
+    #invoice-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
+</style>

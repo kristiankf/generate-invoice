@@ -8,9 +8,9 @@
                 Prev
             </UButton>
 
-            <UButton trailing-icon="hugeicons:download-02" :disabled="!stepper?.hasNext" @click="stepper?.next()">
+            <!-- <UButton trailing-icon="hugeicons:download-02" :disabled="!stepper?.hasNext" @click="stepper?.next()">
                 Finish & Download
-            </UButton>
+            </UButton> -->
         </div>
     </div>
 </template>
