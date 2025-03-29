@@ -20,4 +20,9 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "pinia-plugin-persistedstate/nuxt",
   ],
+  runtimeConfig: {
+    public: {
+      web3formsAccessKey: import.meta.env.NUXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
+    },
+  },
 });
