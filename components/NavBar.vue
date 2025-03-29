@@ -8,9 +8,12 @@
                     IG</h2>
             </NuxtLink>
 
-            <div class="flex gap-3 items-center">
+            <div class="flex gap-3 items-center justify-center">
                 <ThemeComponent />
-                <UIcon name="mdi:github" class="text-2xl" />
+                <a href="https://github.com/kristiankf/generate-invoice" target="_blank" rel="noopener noreferrer"
+                    class="flex items-center">
+                    <UIcon name="mdi:github" class="text-2xl hover:scale-120 transition" />
+                </a>
             </div>
 
             <div class="" v-if="route.path === '/'">

@@ -7,7 +7,7 @@
                 Thanks for using our application. Support us by donating something small here
                 <UIcon name="heroicons:arrow-down" class="relative top-0.5" />
                 <div class="mt-3">
-                    <a href="https://buymeacoffee.com/kriswale" target="_blank"
+                    <a href="https://buymeacoffee.com/kriswale" target="_blank" rel="noopener noreferrer"
                         class="bg-gradient-to-r from-purple-500 via-blue-400 to-purple-700 text-transparent bg-clip-text animate-gradient text-xl sm:text-3xl font-bold">Buy
                         me a coffee</a>
                 </div>
