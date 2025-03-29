@@ -4,7 +4,7 @@
             Here is a preview of how your invoice will look like
         </div>
 
-        <div ref="invoiceRef" id="invoice"
+        <div ref="invoiceRef" id="invoice-container"
             class="invoice w-full max-w-[210mm] aspect-[1/1.414] bg-white shadow-lg border p-[5%] min-[210mm]:p-[50px] mx-auto text-black invoice-font flex flex-col gap-5 justify-between">
 
             <!-- top -->
@@ -28,7 +28,8 @@
                     <!-- logo -->
                     <div class="w-[30%] ">
 
-                        <img v-if="formStore.form.sellerDetails.logo" class="w-full h-auto"
+                        <img v-if="formStore.form.sellerDetails.logo"
+                            class="w-auto h-[50px] md:h-[100px] block ml-auto object-cover"
                             :src="formStore.form.sellerDetails.logo" alt="logo">
 
                     </div>
@@ -125,7 +126,7 @@
                 <!-- Table Data -->
                 <table class="w-full invoice-font-small">
                     <thead>
-                        <tr class="font-bold bg-info-900 text-white">
+                        <tr class="font-bold bg-info-900 text-white border-b border-info-900">
                             <th class="text-center p-1 min-[210mm]:p-2">QTY</th>
                             <th class="text-left p-1 min-[210mm]:p-2">Description</th>
                             <th class="text-right p-1 min-[210mm]:p-2 text-nowrap">Unit Price</th>
@@ -162,11 +163,12 @@
                             <p v-for="charge in formStore.form.itemDetails.charges" :key="charge.id"
                                 class="flex justify-between p-0.5 min-[210mm]:p-1 border-b border-info-900">
                                 <template v-if="charge.chargeValue">
-                                    <span class="font-medium">{{ charge.name }}</span>
+                                    <span class="font-medium">{{ charge.name }} <span v-if="charge.type === 'rate'">({{
+                                        charge.chargeValue
+                                            }}%)</span></span>
                                     <span>{{ currency }}
-                                        <span v-if="charge.type === 'rate'">{{ charge.chargeValue! *
-                                            formStore.form.itemDetails.totals.subTotal! }}({{ charge.chargeValue
-                                            }}%)</span>
+                                        <span v-if="charge.type === 'rate'">{{ (charge.chargeValue! *
+                                            formStore.form.itemDetails.totals.subTotal!) / 100 }}</span>
                                         <span v-if="charge.type === 'value'" class="">{{ charge.chargeValue }}</span>
                                     </span>
                                 </template>
@@ -183,7 +185,7 @@
 
             <!-- buttom information -->
             <div v-if="formStore.form.invoiceDetails.paymentTerms || formStore.form.invoiceDetails.notes"
-                class="flex justify-start">
+                class="flex justify-start pb-20">
                 <div class="w-[40%]">
                     <p class="text-info-900 font-bold invoice-font mb-0.5 min-[210mm]:mb-1">Terms and Notes</p>
                     <div class="invoice-font-small">
@@ -220,20 +222,34 @@ const invoiceRef = ref<HTMLElement | null>(null);
 const printInvoice = () => {
     if (!invoiceRef.value) return;
 
-    const printContent = invoiceRef.value.innerHTML;
-    const originalContent = document.body.innerHTML;
+    const printContent = invoiceRef.value.cloneNode(true) as HTMLElement;
+    const printContainer = document.createElement("div");
 
-    document.body.innerHTML = printContent;
+    printContainer.appendChild(printContent);
+    printContainer.style.position = "fixed";
+    printContainer.style.top = "0";
+    printContainer.style.left = "0";
+    printContainer.style.width = "100%";
+    printContainer.style.backgroundColor = "white";
+    printContainer.style.zIndex = "9999"; // Ensure it's on top
+    document.body.appendChild(printContainer);
+
     window.print();
-    document.body.innerHTML = originalContent;
+
+    // Remove the temporary container after printing
+    document.body.removeChild(printContainer);
 };
 </script>
 
 <style scoped>
 @media print {
+    body {
+        background-color: black;
+        visibility: visible;
+    }
+
     body * {
         visibility: hidden;
-
     }
 
     #invoice-container,
@@ -242,7 +258,13 @@ const printInvoice = () => {
     }
 
     #invoice-container {
-        position: absolute;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    #invoice-container {
+        position: fixed;
         left: 0;
         top: 0;
         width: 100%;
