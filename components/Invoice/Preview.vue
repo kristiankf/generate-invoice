@@ -197,7 +197,7 @@
         </div>
 
         <div class="flex justify-center items-center my-5">
-            <UButton size="xl" leading-icon="material-symbols:download-rounded" @click="generatePDF" color="neutral">
+            <UButton size="xl" leading-icon="material-symbols:download-rounded" @click="printInvoice" color="neutral">
                 Download
                 Your
                 Invoice
@@ -208,8 +208,6 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-// import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 // import html2pdf from "html2pdf"
 
@@ -219,31 +217,16 @@ const currency = formStore.form.invoiceDetails.currency
 // Reference to the invoice section
 const invoiceRef = ref<HTMLElement | null>(null);
 
-const generatePDF = async () => {
-    const invoiceElement = document.getElementById("invoice");
+const printInvoice = () => {
+    if (!invoiceRef.value) return;
 
-    if (invoiceElement) {
-        const { jsPDF } = await import("jspdf");
-        const canvas = await html2canvas(invoiceElement, { scale: 2 });
-        const imgData = canvas.toDataURL("image/png");
+    const printContent = invoiceRef.value.innerHTML;
+    const originalContent = document.body.innerHTML;
 
-        const pdf = new jsPDF("p", "mm", "a4");
-        pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
-        pdf.save("invoice.pdf");
-    }
-
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
 };
-
-// const printInvoice = () => {
-//     if (!invoiceRef.value) return;
-
-//     const printContent = invoiceRef.value.innerHTML;
-//     const originalContent = document.body.innerHTML;
-
-//     document.body.innerHTML = printContent;
-//     window.print();
-//     document.body.innerHTML = originalContent;
-// };
 </script>
 
 <style scoped>
