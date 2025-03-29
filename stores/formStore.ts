@@ -50,10 +50,11 @@ export const useFormStore = defineStore(
         },
       },
     });
-    const formComplete = ref(true);
+    const formComplete = ref(false);
     // const step = computed(() => (formComplete.value ? "preview" : undefined));
 
     function $reset() {
+      formComplete.value = false;
       form.value = {
         invoiceDetails: {
           invoiceNo: "",

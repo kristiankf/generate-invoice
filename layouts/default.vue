@@ -3,6 +3,9 @@
         <div class="">
             <slot />
         </div>
+        <div class="mb-4 mt-20">
+            <FooTer />
+        </div>
     </UApp>
 </template>
 

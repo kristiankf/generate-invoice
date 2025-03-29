@@ -1,5 +1,5 @@
 <template>
-    <header class="h-dvh">
+    <header class="min-h-dvh">
         <div class="max-width pt-20">
             <h1 class="text-4xl sm:leading-14 xl:leading-20 sm:text-5xl xl:text-7xl capitalize">
                 Generate professional invoices instantly and streamline your billing process with ease!
