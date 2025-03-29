@@ -53,7 +53,46 @@ export const useFormStore = defineStore(
     const formComplete = ref(true);
     // const step = computed(() => (formComplete.value ? "preview" : undefined));
 
-    return { form, formComplete };
+    function $reset() {
+      form.value = {
+        invoiceDetails: {
+          invoiceNo: "",
+          invoiceDate: "",
+          dueDate: "",
+          currency: "",
+          notes: "",
+          paymentTerms: "",
+        },
+        sellerDetails: {
+          logo: "",
+          businessName: "",
+          businessAddress: { street: "", city: "", country: "" },
+          email: "",
+          phoneNumber: "",
+          taxId: "",
+        },
+        clientDetails: {
+          clientName: "",
+          businessName: "",
+          businessAddress: { street: "", city: "", country: "" },
+          email: "",
+          phoneNumber: "",
+        },
+        itemDetails: {
+          items: [{ description: "", quantity: null, unitPrice: null, id: 1 }],
+          discount: { type: "rate", discountValue: null },
+          charges: [{ type: "rate", name: "", chargeValue: null, id: 1 }],
+          totals: {
+            subTotal: null,
+            discount: null,
+            charges: null,
+            grandTotal: null,
+          },
+        },
+      };
+    }
+
+    return { form, formComplete, $reset };
   }
   //   { persist: true }
 );

@@ -1,6 +1,12 @@
 <template>
     <div class="mx-auto">
-        <div class="mx-auto max-w-[500px] mb-4 text-center">
+        <InvoiceThanksModal v-if="openThanks" @close="openThanks = false" />
+
+        <div class="max-w-[800px] mb-4 mx-auto">
+            <InvoiceNote />
+        </div>
+
+        <div class="mx-auto max-w-[500px] mb-7 text-center">
             Here is a preview of how your invoice will look like
         </div>
 
@@ -261,6 +267,7 @@ const currency = formStore.form.invoiceDetails.currency
 
 // Reference to the invoice section
 const invoiceRef = ref<HTMLElement | null>(null);
+const openThanks = ref(false)
 
 const printInvoice = () => {
     if (!invoiceRef.value) return;
@@ -281,6 +288,8 @@ const printInvoice = () => {
 
     // Remove the temporary container after printing
     document.body.removeChild(printContainer);
+    openThanks.value = true
+    console.log("something", openThanks.value)
 };
 </script>
 
