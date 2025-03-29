@@ -199,12 +199,55 @@
         </div>
 
         <div class="flex justify-center items-center my-5">
-            <UButton size="xl" leading-icon="material-symbols:download-rounded" @click="printInvoice" color="neutral">
-                Download
-                Your
+            <UButton size="xl" leading-icon="material-symbols:download-rounded" color="neutral" @click="printInvoice">
+                Save
                 Invoice
             </UButton>
+            <!-- <UModal title="Note!">
+                
+
+                <template #body>
+                    <div class="text-xs md:text-sm space-y-3">
+                        <p class=" align-baseline">
+                            <UIcon name="ic:round-warning" class="text-xl text-warning-500 relative top-1" />
+
+                            <span>Your browser might have
+                                <span class="font-bold text-info-800"> background graphics </span>
+                                disabled. Enable this setting to get
+                                background colors. </span>
+                            <span class=" italic">Look for background graphics on your print preview modal settings and
+                                check it
+                                .</span>
+                        </p>
+                        <p class=" align-baseline">
+                            <UIcon name="ic:round-warning" class="text-xl text-warning-500 relative top-1" />
+
+                            <span>Your browser might have
+                                <span class="font-bold text-info-800"> headers and footers </span>(which displays some
+                                unwanted info) setting enabled. Remove this if not
+                                needed. </span>
+                            <span class=" italic">Look for header and footer option on your print preview modal and
+                                uncheck it.</span>
+                        </p>
+
+                        <p class=" font-semibold">
+
+                            <span>Use desktop for best experience</span>
+                        </p>
+
+                        <div class="flex justify-center items-center !mt-6">
+                            <UButton size="sm" leading-icon="material-symbols:download-rounded" color="neutral"
+                                @click="printInvoice">
+                                Proceed to Save Invoice
+                            </UButton>
+                        </div>
+
+                    </div>
+                </template>
+            </UModal> -->
+
         </div>
+
     </div>
 </template>
 
